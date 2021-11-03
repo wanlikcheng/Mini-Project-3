@@ -64,27 +64,31 @@ function genreChart(data, genre){
             .attr("cx", d => xScale(d.Released_Year))
             .attr("cy", d => yScale(d.Gross))
             .attr("r", 5)
+            .attr("class","circle")
             .attr("fill", "white")
             .attr("opacity", 0.6)
             .attr("stroke", "black")
             .on("mouseover", function(event, d) {
                 //Update the tooltip position and value
-                d3.select("#tooltip")
+                d3.select("#tooltip2")
                     .style("left", d3.select(this).attr("cx") + "px")
                     .style("top", d3.select(this).attr("cy") + "px")
-                    .select("#value")
+                    .select("#val")
                     .text(d.Series_Title);
-                    console.log(d.Series_Title)
-                    console.log(d.Gross)
+                    console.log(d.Series_Title);
+                    console.log(d.Gross);
     
                 //Show the tooltip
-                d3.select("#tooltip").classed("hidden", false);
+                d3.select("#tooltip2").classed("hidden", false);
+                //d3.selectAll('.circle').style('fill', 'blue');
+                //d3.select(this).style("fill", "#9B111E");
     
-                console.log("mouseoverred xd");
+                console.log("mouseoverred scatter");
             })
             .on("mouseout", function(d) {
                 //Hide the tooltip
-                d3.select("#tooltip").classed("hidden", true);
+                d3.select("#tooltip2").classed("hidden", true);
+               // d3.selectAll('.circle').style('fill', 'white');
             })
         
     svg2.selectAll("text")
