@@ -1,9 +1,44 @@
 
+const margin = ({top: 20, right: 40, bottom: 20, left: 80})
+
+const width = 650 - margin.left - margin.right;
+const height = 500 - margin.top - margin.bottom;
+
+var svg2 = d3.select(".scatterplot")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height+ margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+
+
+var xScale = d3.scaleLinear()
+    .range([0, width])
+
+var yScale = d3.scaleLinear()
+    .range([height, 0])
+
+var xAxis = d3.axisBottom()
+    .ticks(5, "s")
+
+var yAxis = d3.axisLeft()
+
+var xAxisGroup = svg2.append("g")
+    .attr("class", "axis x-axis")
+    .attr("transform", `translate(0, ${height})`)
+
+var yAxisGroup = svg2.append("g")
+    .attr("class", "axis y-axis")
+    .attr("transform", `translate(0, ${0})`)
+
+
+
 function genreChart(data, genre){
     console.log("chosenGenre", genre);
     d3.csv("imdb_top_1000.csv", d3.autoType)
         .then(data => {
 
+    
     var datafilter = data.filter(function(d) {
         if(d["Genre"] == genre){
             return d;
@@ -13,41 +48,46 @@ function genreChart(data, genre){
         d.Released_Year = +d.Released_Year;
         d.Gross = +d.Gross;
     })
+
+    //datafilter = data.filter(d=> d.Gross != null)
+    //datafilter = data.filter(d=> d.Gross != 0)
+
     
     
     console.log("genreFiltered", datafilter);
 
-    const margin = ({top: 20, right: 40, bottom: 20, left: 40})
+    xScale.domain(d3.extent(datafilter, d => d.Released_Year)).nice()
+    yScale.domain(d3.extent(datafilter, d => d.Gross)).nice()
 
-    const width = 650 - margin.left - margin.right;
-    const height = 500 - margin.top - margin.bottom;
-    const svg2 = d3.select(".scatterplot")
-            .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height+ margin.top + margin.bottom)
-            .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-       
-        
-        const xScale = d3.scaleLinear()
-            .domain(d3.extent(datafilter, d => d.Released_Year))
-            .range([0, width]) 
-        
-        const yScale = d3.scaleLinear()
-            .domain(d3.extent(datafilter, d => d.Gross)).nice()
-            .range([height, 0])
-            svg2.selectAll("circle")
+    svg2.selectAll("circle")
             .data(datafilter)
-            .enter()
-            .append("circle")
             .attr("cx", d => xScale(d.Released_Year))
             .attr("cy", d => yScale(d.Gross))
             .attr("r", 5)
             .attr("fill", "white")
             .attr("opacity", 0.6)
-            .attr("stroke", "black");
+            .attr("stroke", "black")
+            .on("mouseover", function(event, d) {
+                //Update the tooltip position and value
+                d3.select("#tooltip")
+                    .style("left", d3.select(this).attr("cx") + "px")
+                    .style("top", d3.select(this).attr("cy") + "px")
+                    .select("#value")
+                    .text(d.Series_Title);
+                    console.log(d.Series_Title)
+                    console.log(d.Gross)
+    
+                //Show the tooltip
+                d3.select("#tooltip").classed("hidden", false);
+    
+                console.log("mouseoverred xd");
+            })
+            .on("mouseout", function(d) {
+                //Hide the tooltip
+                d3.select("#tooltip").classed("hidden", true);
+            })
         
-        svg2.selectAll("text")
+    svg2.selectAll("text")
             .data(datafilter)
             .enter()
             .append("text")
@@ -56,41 +96,28 @@ function genreChart(data, genre){
             .attr("y", d => yScale(d.Gross))
             .attr("font-size", 10)
 
-        
-        // using axis
-        const xAxis = d3.axisBottom()
-	        .scale(xScale)
-            .ticks(5, "s")
+    xAxis.scale(xScale)
+    yAxis.scale(yScale)
 
-        const yAxis = d3.axisLeft()
-	        .scale(yScale)
-        // Draw the axis
-        let xAxisGroup = svg2.append("g")
-            .call(xAxis)
-            .attr("class", "axis x-axis")
-            .attr("transform", `translate(0, ${height})`)
+    xAxisGroup.call(xAxis)
+    yAxisGroup.call(yAxis)
 
-        let yAxisGroup = svg2.append("g")
-            .call(yAxis)
-            .attr("class", "axis y-axis")
-            .attr("transform", `translate(0, ${0})`)
-
-        // adding labels
-        svg2.append("text")
+    // adding labels
+    svg2.append("text")
             .attr("class", "xlabel")
             .attr('x', width - 150)
             .attr('y', height - 10)
             .attr("alignment-baseline", "baseline")
             .text("Year")
 
-        svg2.append("text")
+    svg2.append("text")
             .attr("class", "ylabel")
             .attr('x', 10)
             .attr('y', 5)
             .attr("alignment-baseline", "baseline")
             .text("Gross Profit")
 
-        svg2.exit().remove();
+    //svg2.exit().remove();
 
 })}
 
@@ -99,10 +126,11 @@ function genreChart(data, genre){
 let movieData;
 let data;
 let clicked;
-d3.csv("genres.csv", d3.autoType)
-    .then(data=>{
+d3.csv("genres.csv", d3.autoType).then(data=>{
+    d3.csv("imdb_top_1000.csv", d3.autoType).then(movieData => {
+
         console.log("Movie data: ", data);
-        movieData = data;
+        //movieData = data;
 
         // margin
         const margin = ({top: 40, right: 40, bottom: 40, left: 40})
@@ -131,7 +159,7 @@ d3.csv("genres.csv", d3.autoType)
 
         // creating bars
         let bars = svg.selectAll("rect")
-            .data(movieData)
+            .data(data)
             .enter()
             .append("rect")
             .attr("class", "bar")
@@ -170,7 +198,6 @@ d3.csv("genres.csv", d3.autoType)
                 d3.selectAll('.bar').style('fill', 'red');
                 d3.select(this).style("fill", "#9B111E");
 
-                console.log("mouseoverred xd", xPosition, yPosition);
             })
             .on("mouseout", function(d) {
                 //Hide the tooltip
@@ -179,18 +206,33 @@ d3.csv("genres.csv", d3.autoType)
             })
             //changes color of clicked bar-- calls the genreChart function for scatter plot
             .on("click", function(event, d){
-                d3.select("svg2").remove();
-                 clicked =d.genre;
+                //d3.select("svg2").remove();
+                clicked =d.genre;
                 
                
               
-               d3.select("#barchart")
+                d3.select("#barchart")
                     .attr("fill", function () { return "rgb(0, 0, " + Math.round(d * 10) + ")"; });
                
-               d3.selectAll('.bar').style('fill', 'red');
-               d3.select(this).style("fill", "#012B4E");
-               genreChart(data,clicked);
-               var active   = clicked.active ? false : true;
+                d3.selectAll('.bar').style('fill', 'red');
+                d3.select(this).style("fill", "#012B4E");
+
+
+                movieData = movieData.filter(d=> d.Gross != null)
+                
+                svg2.selectAll("circle")
+                    .data(movieData)
+                    .enter()
+                    .append("circle")
+                    .attr("cx", d => xScale(d.Released_Year))
+                    .attr("cy", d => yScale(d.Gross))
+                    .attr("r", 5)
+                    .attr("fill", "white")
+                    .attr("opacity", 0.6)
+                    .attr("stroke", "black")
+                    
+                genreChart(movieData,clicked);
+                var active   = clicked.active ? false : true;
 
                 //could use different opacities to display instead
 
@@ -233,6 +275,9 @@ d3.csv("genres.csv", d3.autoType)
 
     })
 
+})
+
+/*
 d3.csv("imdb_top_1000.csv", d3.autoType)
     .then(data => {
         //data.forEach(function(d) {
@@ -245,11 +290,6 @@ d3.csv("imdb_top_1000.csv", d3.autoType)
                 console.log("Movie data: ", data);
         
         // margin convention
-        const margin = ({top: 20, right: 40, bottom: 20, left: 40})
-
-        const width = 650 - margin.left - margin.right;
-        const height = 500 - margin.top - margin.bottom;
-
 
          //I commented this out to put it in a different function -- probably could uncomment 
         /*const svg = d3.select(".scatterplot")
@@ -335,6 +375,7 @@ d3.csv("imdb_top_1000.csv", d3.autoType)
         //     .attr("d", line);
 
         
-       
+       /*
     
     })
+*/
