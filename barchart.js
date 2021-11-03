@@ -1,6 +1,7 @@
 // CHART INIT ------------------------------
 let movieData;
 let data;
+let clicked;
 
 // // sorting with button
 // let sort = document.querySelector('#sort-order').onclick = function(){
@@ -59,7 +60,7 @@ d3.csv("genres.csv", d3.autoType)
             .range([height, 0])
 
         // creating bars
-        svg.selectAll("rect")
+        let bars = svg.selectAll("rect")
             .data(movieData)
             .enter()
             .append("rect")
@@ -95,12 +96,32 @@ d3.csv("genres.csv", d3.autoType)
 
                 //Show the tooltip
                 d3.select("#tooltip").classed("hidden", false);
+                //-- hover color added(it stopped working for me)
+                d3.selectAll('.bar').style('fill', 'red');
+                d3.select(this).style("fill", "#9B111E");
 
                 console.log("mouseoverred xd", xPosition, yPosition);
             })
             .on("mouseout", function(d) {
                 //Hide the tooltip
                 d3.select("#tooltip").classed("hidden", true);
+                d3.selectAll('.bar').style('fill', 'red'); // -- added bc hover color did not leave otherwise
+            })
+            // -- changes color of a clicked bar
+            .on("click", function(event, d){
+                 clicked =d.genre;
+               d3.select("#barchart")
+                    .attr("fill", function () { return "rgb(0, 0, " + Math.round(d * 10) + ")"; });
+               
+               d3.selectAll('.bar').style('fill', 'red');
+               d3.select(this).style("fill", "#012B4E");
+               //COULD try to use different opacities for display
+               //var active   = clicked.active ? false : true,
+               //newOpacity = active ? 0 : 1;
+               // d3.select(".scatterplot").style("opacity",newOpacity);
+                clicked.active = active;
+               console.log("clicked", clicked);
+
             });
 
         // using axis
@@ -128,5 +149,7 @@ d3.csv("genres.csv", d3.autoType)
             .attr('y', -3)
             .attr("alignment-baseline", "baseline")
             .text("Number of Movies")
+
+        
 
     })
