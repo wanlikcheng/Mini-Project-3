@@ -321,7 +321,7 @@ d3.csv("genres.csv", d3.autoType).then(data=>{
                     xScale.bandwidth() / 2;
 
                 let yPosition =
-                    margin.top + parseFloat(d3.select(this).attr("y")) / 3 + height;
+                    parseFloat(d3.select(this).attr("y")) / 3 + 200;
 
                 //Update the tooltip position and value
                 d3.select("#tooltip")
