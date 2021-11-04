@@ -68,6 +68,7 @@ function genreChart(data, genre){
             .attr("fill", "white")
             .attr("opacity", 0.6)
             .attr("stroke", "black")
+            .exit().remove()
             .on("mouseover", function(event, d) {
                 //Update the tooltip position and value
                 d3.select("#tooltip2")
