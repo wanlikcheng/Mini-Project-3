@@ -117,6 +117,7 @@ function genreChart(data, genre){
             .on("mouseout", function(d) {
                 //Hide the tooltip
                 d3.select("#tooltip2").classed("hidden", true);
+                d3.select("#tooltip2").style("display", "none");
                // d3.selectAll('.circle').style('fill', 'white');
             })
             .exit().remove()
@@ -254,6 +255,7 @@ function genreChart2(data, genre){
             .on("mouseout", function(d) {
                 //Hide the tooltip
                 d3.select("#tooltip3").classed("hidden", true);
+                d3.select("#tooltip3").style("display", "none");
                // d3.selectAll('.circle').style('fill', 'white');
             })
             .exit().remove()
