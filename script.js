@@ -92,8 +92,8 @@ function genreChart(data, genre){
                 d3.select('#tooltip2')
                     .classed("hidden", false)
                     .style('display', 'block')
-                    .style('left', (pos[0]) + "px")
-                    .style('top', (pos[1]) + 'px')
+                    .style('left', (pos[0] - margin.left) + "px")
+                    .style('top', (pos[1] - margin.bottom - margin.top) + 'px')
                     .html(`
                         <div> Movie: ${d.Series_Title} </div>
                         <div> Rating: ${d.IMDB_Rating} </div>
@@ -246,8 +246,8 @@ function genreChart2(data, genre){
                 d3.select('#tooltip3')
                 .classed("hidden", false)
                 .style('display', 'block')
-                .style('left', (pos[0] + 5) + "px")
-                .style('top', (pos[1] + 5) + 'px')
+                .style('left', (pos[0] - margin.left) + "px")
+                .style('top', (pos[1] - margin.bottom - margin.top) + 'px')
                 .html(`
                     <div> Movie: ${d.Series_Title} </div>
                     <div> Rating: ${d.IMDB_Rating} </div>
