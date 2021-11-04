@@ -111,8 +111,8 @@ function genreChart(data, genre){
     // adding labels
     svg2.append("text")
             .attr("class", "xlabel")
-            .attr('x', width - 150)
-            .attr('y', height - 10)
+            .attr('x', width - 120)
+            .attr('y', height + 30)
             .attr("alignment-baseline", "baseline")
             .text("Year")
 
@@ -237,8 +237,8 @@ function genreChart2(data, genre){
     // adding labels
     svg3.append("text")
             .attr("class", "xlabel")
-            .attr('x', width2 - 150)
-            .attr('y', height2 - 10)
+            .attr('x', width2 - 120)
+            .attr('y', height2 +30)
             .attr("alignment-baseline", "baseline")
             .text("Year")
 
