@@ -11,6 +11,21 @@ var svg2 = d3.select(".scatterplot")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
+// adding labels
+svg2.append("text")
+        .attr("class", "xlabel")
+        .attr('x', width - 120)
+        .attr('y', height + 30)
+        .attr("alignment-baseline", "baseline")
+        .text("Year")
+
+svg2.append("text")
+        .attr("class", "ylabel")
+        .attr('x', 10)
+        .attr('y', 5)
+        .attr("alignment-baseline", "baseline")
+        .text("Gross Profit")
+
 
 var xScale = d3.scaleLinear()
     .range([0, width])
@@ -108,21 +123,6 @@ function genreChart(data, genre){
     xAxisGroup.call(xAxis)
     yAxisGroup.call(yAxis)
 
-    // adding labels
-    svg2.append("text")
-            .attr("class", "xlabel")
-            .attr('x', width - 120)
-            .attr('y', height + 30)
-            .attr("alignment-baseline", "baseline")
-            .text("Year")
-
-    svg2.append("text")
-            .attr("class", "ylabel")
-            .attr('x', 10)
-            .attr('y', 5)
-            .attr("alignment-baseline", "baseline")
-            .text("Gross Profit")
-
     //svg2.exit().remove();
 
 })}
@@ -137,6 +137,21 @@ var svg3 = d3.select(".scatterplot2")
     .attr("height", height+ margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+
+// adding labels
+svg3.append("text")
+        .attr("class", "xlabel")
+        .attr('x', width2 - 120)
+        .attr('y', height2 +30)
+        .attr("alignment-baseline", "baseline")
+        .text("Year")
+
+svg3.append("text")
+        .attr("class", "ylabel")
+        .attr('x', 10)
+        .attr('y', 5)
+        .attr("alignment-baseline", "baseline")
+        .text("IMDB Rating")
 
 
 var xScale2 = d3.scaleLinear()
@@ -234,21 +249,6 @@ function genreChart2(data, genre){
     xAxisGroup2.call(xAxis2)
     yAxisGroup2.call(yAxis2)
 
-    // adding labels
-    svg3.append("text")
-            .attr("class", "xlabel")
-            .attr('x', width2 - 120)
-            .attr('y', height2 +30)
-            .attr("alignment-baseline", "baseline")
-            .text("Year")
-
-    svg3.append("text")
-            .attr("class", "ylabel")
-            .attr('x', 10)
-            .attr('y', 5)
-            .attr("alignment-baseline", "baseline")
-            .text("IMDB Rating")
-
     //svg2.exit().remove();
 
 })}
@@ -262,6 +262,10 @@ let data;
 let clicked;
 d3.csv("genres.csv", d3.autoType).then(data=>{
     d3.csv("imdb_top_1000.csv", d3.autoType).then(movieData => {
+
+        // display plots
+        genreChart(movieData,null);
+        genreChart2(movieData,null);
 
         console.log("Movie data: ", data);
         //movieData = data;
