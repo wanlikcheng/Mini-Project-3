@@ -34,7 +34,7 @@ var yScale = d3.scaleLinear()
     .range([height, 0])
 
 var xAxis = d3.axisBottom()
-    .ticks(5, "s")
+    .tickFormat(d3.format("d"))
 
 var yAxis = d3.axisLeft()
 
@@ -173,7 +173,7 @@ var yScale2 = d3.scaleLinear()
     .range([height2, 0])
 
 var xAxis2 = d3.axisBottom()
-    .ticks(5, "s")
+    .tickFormat(d3.format("d"))
 
 var yAxis2 = d3.axisLeft()
 
