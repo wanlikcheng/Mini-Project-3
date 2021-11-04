@@ -69,19 +69,31 @@ function genreChart(data, genre){
             .attr("fill", "white")
             .attr("opacity", 0.6)
             .attr("stroke", "black")
-            .exit().remove()
             .on("mouseover", function(event, d) {
                 //Update the tooltip position and value
-                d3.select("#tooltip2")
+
+                const pos = d3.pointer(event, window)
+                
+                d3.select('#tooltip2')
+                    .classed("hidden", false)
+                    .style('display', 'block')
+                    .style('left', (pos[0]) + "px")
+                    .style('top', (pos[1]) + 'px')
+                    .html(`
+                        <div> Movie: ${d.Series_Title} </div>
+                        <div> Rating: ${d.IMDB_Rating} </div>
+                        <div> Gross Profit: ${d3.format(",")(d.Gross)} </div>
+                        `
+                    );
+                /*
+                d3.select("#tooltip3")
                     .style("left", d3.select(this).attr("cx") + "px")
                     .style("top", d3.select(this).attr("cy") + "px")
-                    .select("#val")
                     .text(d.Series_Title);
                     console.log(d.Series_Title);
                     console.log(d.Gross);
-    
+                */
                 //Show the tooltip
-                d3.select("#tooltip2").classed("hidden", false);
                 //d3.selectAll('.circle').style('fill', 'blue');
                 //d3.select(this).style("fill", "#9B111E");
     
@@ -92,6 +104,7 @@ function genreChart(data, genre){
                 d3.select("#tooltip2").classed("hidden", true);
                // d3.selectAll('.circle').style('fill', 'white');
             })
+            .exit().remove()
         
     svg2.selectAll("text")
             .data(datafilter)
@@ -111,7 +124,7 @@ function genreChart(data, genre){
     // adding labels
     svg2.append("text")
             .attr("class", "xlabel")
-            .attr('x', width - 150)
+            .attr('x', width)
             .attr('y', height - 10)
             .attr("alignment-baseline", "baseline")
             .text("Year")
@@ -195,19 +208,31 @@ function genreChart2(data, genre){
             .attr("fill", "white")
             .attr("opacity", 0.6)
             .attr("stroke", "black")
-            .exit().remove()
             .on("mouseover", function(event, d) {
                 //Update the tooltip position and value
+
+                const pos = d3.pointer(event, window)
+                
+                d3.select('#tooltip3')
+                .classed("hidden", false)
+                .style('display', 'block')
+                .style('left', (pos[0] + 5) + "px")
+                .style('top', (pos[1] + 5) + 'px')
+                .html(`
+                    <div> Movie: ${d.Series_Title} </div>
+                    <div> Rating: ${d.IMDB_Rating} </div>
+                    <div> Gross Profit: ${d3.format(",")(d.Gross)} </div>
+                    `
+                );
+                /*
                 d3.select("#tooltip3")
                     .style("left", d3.select(this).attr("cx") + "px")
                     .style("top", d3.select(this).attr("cy") + "px")
-                    .select("#val")
                     .text(d.Series_Title);
                     console.log(d.Series_Title);
                     console.log(d.Gross);
-    
+                */
                 //Show the tooltip
-                d3.select("#tooltip3").classed("hidden", false);
                 //d3.selectAll('.circle').style('fill', 'blue');
                 //d3.select(this).style("fill", "#9B111E");
     
@@ -218,6 +243,7 @@ function genreChart2(data, genre){
                 d3.select("#tooltip3").classed("hidden", true);
                // d3.selectAll('.circle').style('fill', 'white');
             })
+            .exit().remove()
         
     svg3.selectAll("text")
             .data(datafiltered)
@@ -237,7 +263,7 @@ function genreChart2(data, genre){
     // adding labels
     svg3.append("text")
             .attr("class", "xlabel")
-            .attr('x', width2 - 150)
+            .attr('x', width2)
             .attr('y', height2 - 10)
             .attr("alignment-baseline", "baseline")
             .text("Year")
