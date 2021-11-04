@@ -14,7 +14,7 @@ var svg2 = d3.select(".scatterplot")
 // adding labels
 svg2.append("text")
         .attr("class", "xlabel")
-        .attr('x', width - 120)
+        .attr('x', width - 60)
         .attr('y', height + 30)
         .attr("alignment-baseline", "baseline")
         .text("Year")
@@ -117,6 +117,7 @@ function genreChart(data, genre){
             .on("mouseout", function(d) {
                 //Hide the tooltip
                 d3.select("#tooltip2").classed("hidden", true);
+                d3.select("#tooltip2").style("display", "none");
                // d3.selectAll('.circle').style('fill', 'white');
             })
             .exit().remove()
@@ -136,23 +137,6 @@ function genreChart(data, genre){
     xAxisGroup.call(xAxis)
     yAxisGroup.call(yAxis)
 
-    // adding labels
-    svg2.append("text")
-            .attr("class", "xlabel")
-            .attr('x', width)
-            .attr('y', height - 10)
-            .attr("alignment-baseline", "baseline")
-            .text("Year")
-
-    svg2.append("text")
-            .attr("class", "ylabel")
-            .attr('x', 10)
-            .attr('y', 5)
-            .attr("alignment-baseline", "baseline")
-            .text("Gross Profit")
-
-    //svg2.exit().remove();
-
 })}
 //release year and rating scatterplot
 
@@ -169,7 +153,7 @@ var svg3 = d3.select(".scatterplot2")
 // adding labels
 svg3.append("text")
         .attr("class", "xlabel")
-        .attr('x', width2 - 120)
+        .attr('x', width2 - 60)
         .attr('y', height2 +30)
         .attr("alignment-baseline", "baseline")
         .text("Year")
@@ -271,6 +255,7 @@ function genreChart2(data, genre){
             .on("mouseout", function(d) {
                 //Hide the tooltip
                 d3.select("#tooltip3").classed("hidden", true);
+                d3.select("#tooltip3").style("display", "none");
                // d3.selectAll('.circle').style('fill', 'white');
             })
             .exit().remove()
@@ -289,21 +274,6 @@ function genreChart2(data, genre){
 
     xAxisGroup2.call(xAxis2)
     yAxisGroup2.call(yAxis2)
-
-    // adding labels
-    svg3.append("text")
-            .attr("class", "xlabel")
-            .attr('x', width2)
-            .attr('y', height2 - 10)
-            .attr("alignment-baseline", "baseline")
-            .text("Year")
-
-    svg3.append("text")
-            .attr("class", "ylabel")
-            .attr('x', 10)
-            .attr('y', 5)
-            .attr("alignment-baseline", "baseline")
-            .text("IMDB Rating")
 
     //svg2.exit().remove();
 
