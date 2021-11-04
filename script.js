@@ -1,7 +1,7 @@
 
-const margin = ({top: 20, right: 40, bottom: 20, left: 80})
+const margin = ({top: 20, right: 40, bottom: 50, left: 80})
 
-const width = 650 - margin.left - margin.right;
+const width = 550 - margin.left - margin.right;
 const height = 500 - margin.top - margin.bottom;
 
 var svg2 = d3.select(".scatterplot")
@@ -47,6 +47,7 @@ function genreChart(data, genre){
     datafilter.forEach(function(d){
         d.Released_Year = +d.Released_Year;
         d.Gross = +d.Gross;
+        d.IMDB_Rating = +d.IMDB_Rating;
     })
 
     //datafilter = data.filter(d=> d.Gross != null)
@@ -125,6 +126,134 @@ function genreChart(data, genre){
     //svg2.exit().remove();
 
 })}
+//release year and rating scatterplot
+
+const width2 = 550 - margin.left - margin.right;
+const height2 = 500 - margin.top - margin.bottom;
+
+var svg3 = d3.select(".scatterplot2")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height+ margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+
+
+var xScale2 = d3.scaleLinear()
+    .range([0, width2])
+
+var yScale2 = d3.scaleLinear()
+    .range([height2, 0])
+
+var xAxis2 = d3.axisBottom()
+    .ticks(5, "s")
+
+var yAxis2 = d3.axisLeft()
+
+var xAxisGroup2 = svg3.append("g")
+    .attr("class", "axis x-axis")
+    .attr("transform", `translate(0, ${height2})`)
+
+var yAxisGroup2 = svg3.append("g")
+    .attr("class", "axis y-axis")
+    .attr("transform", `translate(0, ${0})`)
+
+
+
+function genreChart2(data, genre){
+    console.log("chosenGenre", genre);
+    d3.csv("imdb_top_1000.csv", d3.autoType)
+        .then(data => {
+
+    
+    var datafiltered = data.filter(function(d) {
+        if(d["Genre"] == genre){
+            return d;
+        }
+    })
+    datafiltered.forEach(function(d){
+        d.Released_Year = +d.Released_Year;
+        d.IMDB_Rating = +d.IMDB_Rating;
+    })
+
+    //datafilter = data.filter(d=> d.Gross != null)
+    //datafilter = data.filter(d=> d.Gross != 0)
+
+    
+    
+    console.log("ratingsFiltered", datafiltered);
+
+    xScale2.domain(d3.extent(datafiltered, d => d.Released_Year)).nice()
+    yScale2.domain(d3.extent(datafiltered, d => d.IMDB_Rating)).nice()
+
+    svg3.selectAll("circle")
+            .data(datafiltered)
+            .attr("cx", d => xScale2(d.Released_Year))
+            .attr("cy", d => yScale2(d.IMDB_Rating))
+            .attr("r", 5)
+            .attr("class","circle2")
+            .attr("fill", "white")
+            .attr("opacity", 0.6)
+            .attr("stroke", "black")
+            .exit().remove()
+            .on("mouseover", function(event, d) {
+                //Update the tooltip position and value
+                d3.select("#tooltip3")
+                    .style("left", d3.select(this).attr("cx") + "px")
+                    .style("top", d3.select(this).attr("cy") + "px")
+                    .select("#val")
+                    .text(d.Series_Title);
+                    console.log(d.Series_Title);
+                    console.log(d.Gross);
+    
+                //Show the tooltip
+                d3.select("#tooltip3").classed("hidden", false);
+                //d3.selectAll('.circle').style('fill', 'blue');
+                //d3.select(this).style("fill", "#9B111E");
+    
+                console.log("mouseoverred scatter");
+            })
+            .on("mouseout", function(d) {
+                //Hide the tooltip
+                d3.select("#tooltip3").classed("hidden", true);
+               // d3.selectAll('.circle').style('fill', 'white');
+            })
+        
+    svg3.selectAll("text")
+            .data(datafiltered)
+            .enter()
+            .append("text")
+            .text(d => d.year)
+            .attr("x", d => xScale2(d.Released_Year))
+            .attr("y", d => yScale2(d.IMDB_Rating))
+            .attr("font-size", 10)
+
+    xAxis2.scale(xScale2)
+    yAxis2.scale(yScale2)
+
+    xAxisGroup2.call(xAxis2)
+    yAxisGroup2.call(yAxis2)
+
+    // adding labels
+    svg3.append("text")
+            .attr("class", "xlabel")
+            .attr('x', width2 - 150)
+            .attr('y', height2 - 10)
+            .attr("alignment-baseline", "baseline")
+            .text("Year")
+
+    svg3.append("text")
+            .attr("class", "ylabel")
+            .attr('x', 10)
+            .attr('y', 5)
+            .attr("alignment-baseline", "baseline")
+            .text("IMDB Rating")
+
+    //svg2.exit().remove();
+
+})}
+
+
 
 
 //barchart.js insert for test
@@ -235,8 +364,19 @@ d3.csv("genres.csv", d3.autoType).then(data=>{
                     .attr("fill", "white")
                     .attr("opacity", 0.6)
                     .attr("stroke", "black")
+                svg3.selectAll("circle")
+                    .data(movieData)
+                    .enter()
+                    .append("circle")
+                    .attr("cx", d => xScale(d.Released_Year))
+                    .attr("cy", d => yScale(d.IMDB_Rating))
+                    .attr("r", 5)
+                    .attr("fill", "white")
+                    .attr("opacity", 0.6)
+                    .attr("stroke", "black")
                     
                 genreChart(movieData,clicked);
+                genreChart2(movieData,clicked);
                 var active   = clicked.active ? false : true;
 
                 //could use different opacities to display instead
